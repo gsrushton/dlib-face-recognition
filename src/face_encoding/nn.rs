@@ -58,7 +58,7 @@ impl Default for FaceEncoderNetwork {
 
 impl FaceEncoderTrait for FaceEncoderNetwork {
     fn get_face_encodings(
-        &self,
+        &mut self,
         image: &ImageMatrix,
         landmarks: &[FaceLandmarks],
         num_jitters: u32,

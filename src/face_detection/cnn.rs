@@ -54,8 +54,8 @@ impl Default for FaceDetectorCnn {
 }
 
 impl FaceDetectorTrait for FaceDetectorCnn {
-    fn face_locations(&self, image: &ImageMatrix) -> FaceLocations {
-        let detector = &self.inner;
+    fn face_locations(&mut self, image: &ImageMatrix) -> FaceLocations {
+        let detector = &mut self.inner;
 
         unsafe {
             cpp!([detector as "face_detection_cnn*", image as "dlib::matrix<dlib::rgb_pixel>*"] -> FaceLocations as "std::vector<dlib::rectangle>" {

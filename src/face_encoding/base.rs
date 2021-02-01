@@ -7,7 +7,7 @@ pub trait FaceEncoderTrait {
     ///
     /// It is recommended to keep `num_jitters` at 0 unless you know what you're doing.
     fn get_face_encodings(
-        &self,
+        &mut self,
         image: &ImageMatrix,
         landmarks: &[FaceLandmarks],
         num_jitters: u32,

@@ -56,7 +56,7 @@ impl Default for LandmarkPredictor {
 }
 
 impl LandmarkPredictorTrait for LandmarkPredictor {
-    fn face_landmarks(&self, image: &ImageMatrix, rect: &Rectangle) -> FaceLandmarks {
+    fn face_landmarks(&mut self, image: &ImageMatrix, rect: &Rectangle) -> FaceLandmarks {
         let predictor = &self.inner;
 
         unsafe {

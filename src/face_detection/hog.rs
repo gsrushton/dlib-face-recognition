@@ -35,8 +35,8 @@ impl Default for FaceDetector {
 }
 
 impl FaceDetectorTrait for FaceDetector {
-    fn face_locations(&self, image: &ImageMatrix) -> FaceLocations {
-        let detector = &self.inner;
+    fn face_locations(&mut self, image: &ImageMatrix) -> FaceLocations {
+        let detector = &mut self.inner;
 
         unsafe {
             cpp!([detector as "dlib::frontal_face_detector*", image as "dlib::matrix<dlib::rgb_pixel>*"] -> FaceLocations as "std::vector<dlib::rectangle>"  {
@@ -52,7 +52,7 @@ fn test_face_detection() {
 
     let image = image::open("assets/obama_1.jpg").unwrap().to_rgb();
     let matrix = ImageMatrix::from_image(&image);
-    let detector = FaceDetector::new();
+    let mut detector = FaceDetector::new();
 
     let locations = detector.face_locations(&matrix);
 

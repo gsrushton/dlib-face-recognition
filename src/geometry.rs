@@ -75,7 +75,7 @@ fn test_default_image() {
     use crate::matrix::ImageMatrix;
 
     let matrix = ImageMatrix::default();
-    let face_det = FaceDetector::default();
+    let mut face_det = FaceDetector::default();
 
     let locations = face_det.face_locations(&matrix);
 
@@ -92,5 +92,5 @@ fn test_point() {
         })
     };
 
-    assert_eq!(point, Point { x: 42, y: -1000 });
+    assert_eq!(point, Point::new(42, -1000));
 }

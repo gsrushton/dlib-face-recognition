@@ -29,6 +29,21 @@ impl FaceEncoding {
         Self { inner }
     }
 
+    pub fn new(elements: &[f64; 128]) -> Self {
+        let inner = unsafe {
+            cpp!([elements as "double const*"] -> FaceEncodingInner as "dlib::matrix<double,0,1>" {
+                auto inner = dlib::matrix<double,0,1>(128);
+                for (int i = 0; i < 128; i++) {
+                    inner(i) = elements[i];
+                }
+
+                return inner;
+            })
+        };
+
+        Self { inner }
+    }
+
     /// Calculate the euclidean distance between two encodings.
     ///
     /// This value can be compared to a constant to determine if the faces are the same or not.
@@ -39,6 +54,19 @@ impl FaceEncoding {
                 return dlib::length(*self - *other);
             })
         }
+    }
+
+    pub fn to_elements(&self) -> [f64; 128] {
+        let elements = [0f64; 128];
+        unsafe {
+            let elements = &elements;
+            cpp!([self as "const dlib::matrix<double,0,1>*", elements as "double*"] {
+                for (int i = 0; i < 128; ++i) {
+                    elements[i] = (*self)(i);
+                }
+            });
+        }
+        elements
     }
 }
 
@@ -89,4 +117,13 @@ fn encoding_test() {
     assert_ne!(encoding_a, encoding_b);
 
     assert_eq!(encoding_a.distance(&encoding_b), 128.0_f64.sqrt());
+}
+
+#[test]
+fn can_convert_to_and_from_elements() {
+    let mut elements = [0f64; 128];
+    for (i, element) in elements.iter_mut().enumerate() {
+        *element = i as f64;
+    }
+    assert_eq!(FaceEncoding::new(&elements).to_elements(), elements);
 }
